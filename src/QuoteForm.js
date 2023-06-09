@@ -270,63 +270,63 @@ const Form = () => {
             <div id="errorMessage" className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" style={{ display: 'none' }}>
                 <p>{formProperties.errorMessage}</p>
             </div>
-            <form className="text-center flex flex-col items-center justify-center" onSubmit={handleSubmit}>
-                <h3 className="mb-4 text-xl font-normal">Quote Form</h3>
-                <div className="flex flex-col w-full space-y-6">
-                    <div className="flex flex-row space-x-4 w-full">
-                        <div className="flex flex-col items-start justify-center space-y-2 w-full">
+            <form className="text-center flex flex-col items-left justify-left" onSubmit={handleSubmit}>
+                <h3 className="mb-4 text-xl font-normal text-left">Quote Form</h3>
+                <div className="flex flex-col w-full space-y-3">
+                    <div className="form-row">
+                        <div className="field-wrapper">
                             <label htmlFor="firstName">First Name <span className="ml-1 text-[red]">*</span></label>
-                            <input className="form-input w-full" name="firstName" type="text" id="firstName" value={formData.firstName} onChange={event => setFormData({ ...formData, firstName: event.target.value })} required />
+                            <input className="form-input field-input" name="firstName" type="text" id="firstName" value={formData.firstName} onChange={event => setFormData({ ...formData, firstName: event.target.value })} required />
                         </div>
-                        <div className="flex flex-col items-start justify-center space-y-2 w-full">
+                        <div className="field-wrapper">
                             <label htmlFor="lastName">Last Name <span className="ml-1 text-[red]">*</span></label>
-                            <input className="form-input w-full" name="lastName" type="text" id="lastName" value={formData.lastName} onChange={event => setFormData({ ...formData, lastName: event.target.value })} required />
+                            <input className="form-input field-input" name="lastName" type="text" id="lastName" value={formData.lastName} onChange={event => setFormData({ ...formData, lastName: event.target.value })} required />
                         </div>
                     </div>
-                    <div className="flex flex-row w-full">
-                        <div className="flex flex-col items-start justify-center space-y-2 w-full">
+                    <div className="form-row">
+                        <div className="field-wrapper">
                             <label htmlFor="companyName">Organization Name</label>
-                            <input className="form-input w-full" name="companyName" type="text" id="companyName" value={formData.companyName} onChange={event => setFormData({ ...formData, companyName: event.target.value })} />
+                            <input className="form-input field-input" name="companyName" type="text" id="companyName" value={formData.companyName} onChange={event => setFormData({ ...formData, companyName: event.target.value })} />
                         </div>
                     </div>
-                    <div className="flex flex-row w-full">
-                        <div className="flex flex-col items-start justify-center space-y-2 w-full">
+                    <div className="form-row">
+                        <div className="field-wrapper">
                             <label htmlFor="email">Email <span className="ml-1 text-[red]">*</span></label>
                             <div className="text-sm">We&apos;ll never share your email with anyone else.</div>
-                            <input className="form-input w-full" name="email" type="email" id="email" value={formData.email} onChange={event => setFormData({ ...formData, email: event.target.value })} required />
+                            <input className="form-input field-input" name="email" type="email" id="email" value={formData.email} onChange={event => setFormData({ ...formData, email: event.target.value })} required />
                         </div>
                     </div>
-                    <div className="flex flex-row space-x-4 w-full">
-                        <div className="flex flex-col items-start justify-center space-y-2 w-full">
+                    <div className="form-row">
+                        <div className="field-wrapper">
                             <label htmlFor="cellPhone">Cell Phone <span className="ml-1 text-[red]">*</span></label>
-                            <input className="form-input w-full" name="cellPhone" type="tel" id="cellPhone" value={formData.cellPhone} onChange={event => setFormData({ ...formData, cellPhone: event.target.value })} required />
+                            <input className="form-input field-input" name="cellPhone" type="tel" id="cellPhone" value={formData.cellPhone} onChange={event => setFormData({ ...formData, cellPhone: event.target.value })} required />
                         </div>
-                        <div className="flex flex-col items-start justify-center space-y-2 w-full">
+                        <div className="field-wrapper">
                             <label htmlFor="homePhone">Home Phone</label>
-                            <input className="form-input w-full" name="homePhone" type="tel" id="homePhone" value={formData.homePhone} onChange={event => setFormData({ ...formData, homePhone: event.target.value })} />
+                            <input className="form-input field-input" name="homePhone" type="tel" id="homePhone" value={formData.homePhone} onChange={event => setFormData({ ...formData, homePhone: event.target.value })} />
                         </div>
-                        <div className="flex flex-col items-start justify-center space-y-2 w-full">
+                        <div className="field-wrapper">
                             <label htmlFor="workPhone">Work Phone</label>
-                            <input className="form-input w-full" name="workPhone" type="tel" id="workPhone" value={formData.workPhone} onChange={event => setFormData({ ...formData, workPhone: event.target.value })} />
+                            <input className="form-input field-input" name="workPhone" type="tel" id="workPhone" value={formData.workPhone} onChange={event => setFormData({ ...formData, workPhone: event.target.value })} />
                         </div>
                     </div>
-                    <div className="flex flex-row space-x-4 w-full">
-                        <div className="flex flex-col items-start justify-center space-y-2 w-full">
+                    <div className="form-row">
+                        <div className="field-wrapper">
                             <label htmlFor="subject">Subject <span className="ml-1 text-[red]">*</span></label>
-                            <select className="form-select w-full" name="subject" id="subject" value={formData.subject} onChange={event => setFormData({ ...formData, subject: event.target.value })} required>
+                            <select className="form-select field-input" name="subject" id="subject" value={formData.subject} onChange={event => setFormData({ ...formData, subject: event.target.value })} required>
                                 <option value="">I need some help with...</option>
                                 <option value="myHomework">My homework</option>
                                 <option value="practicingMyHammerDance">Practicing my hammer dance</option>
                                 <option value="findingMyBellyButton">Finding my belly button</option>
                             </select>
                         </div>
-                        <div className="flex flex-col items-start justify-center space-y-2 w-full">
+                        <div className="field-wrapper">
                             <label htmlFor="appointmentDate">Appointment Date</label>
-                            <input className="form-input w-full" name="appointmentDate" type="text" id="appointmentDate" placeholder="YYYY/MM/DD" autoComplete="off" value={formData.appointmentDate} onChange={event => setFormData({ ...formData, appointmentDate: event.target.value })} />
+                            <input className="form-input field-input" name="appointmentDate" type="text" id="appointmentDate" placeholder="YYYY/MM/DD" autoComplete="off" value={formData.appointmentDate} onChange={event => setFormData({ ...formData, appointmentDate: event.target.value })} />
                         </div>
-                        <div className="flex flex-col items-start justify-center space-y-2 w-full">
+                        <div className="field-wrapper">
                             <label htmlFor="department">Department <span className="ml-1 text-[red]">*</span></label>
-                            <select className="form-select w-full" name="department" id="department" value={formData.department} onChange={event => setFormData({ ...formData, department: event.target.value })} required>
+                            <select className="form-select field-input" name="department" id="department" value={formData.department} onChange={event => setFormData({ ...formData, department: event.target.value })} required>
                                 <option value="">Please choose...</option>
                                 <option value="sales@example.com">Sales</option>
                                 <option value="service@example.com">Service</option>
@@ -334,55 +334,55 @@ const Form = () => {
                             </select>
                         </div>
                     </div>
-                    <div className="flex flex-row space-x-4 w-full">
-                        <div className="flex flex-col items-start justify-center space-y-2 w-full">
+                    <div className="form-row">
+                        <div className="field-wrapper">
                             <label htmlFor="howMuchDoYouEnjoyEatingPie-1" className="flex flex-row">How much do you enjoy eating pie?</label>
                             <div className="flex flex-row space-x-4">
                                 <label htmlFor="howMuchDoYouEnjoyEatingPie-1" className="flex flex-row items-center justify-center">
-                                    <input className="form-radio mr-2" name="howMuchDoYouEnjoyEatingPie" type="radio" id="howMuchDoYouEnjoyEatingPie-1" value="1" onChange={event => setFormData({ ...formData, howMuchDoYouEnjoyEatingPie: event.target.value })} /> 1
+                                    <input className="field-input-radio" name="howMuchDoYouEnjoyEatingPie" type="radio" id="howMuchDoYouEnjoyEatingPie-1" value="1" onChange={event => setFormData({ ...formData, howMuchDoYouEnjoyEatingPie: event.target.value })} /> 1
                                 </label>
                                 <label htmlFor="howMuchDoYouEnjoyEatingPie-2" className="flex flex-row items-center justify-center">
-                                    <input className="form-radio mr-2" name="howMuchDoYouEnjoyEatingPie" type="radio" id="howMuchDoYouEnjoyEatingPie-2" value="2" onChange={event => setFormData({ ...formData, howMuchDoYouEnjoyEatingPie: event.target.value })} /> 2
+                                    <input className="field-input-radio" name="howMuchDoYouEnjoyEatingPie" type="radio" id="howMuchDoYouEnjoyEatingPie-2" value="2" onChange={event => setFormData({ ...formData, howMuchDoYouEnjoyEatingPie: event.target.value })} /> 2
                                 </label>
                                 <label htmlFor="howMuchDoYouEnjoyEatingPie-3" className="flex flex-row items-center justify-center">
-                                    <input className="form-radio mr-2" name="howMuchDoYouEnjoyEatingPie" type="radio" id="howMuchDoYouEnjoyEatingPie-3" value="3" onChange={event => setFormData({ ...formData, howMuchDoYouEnjoyEatingPie: event.target.value })} /> 3
+                                    <input className="field-input-radio" name="howMuchDoYouEnjoyEatingPie" type="radio" id="howMuchDoYouEnjoyEatingPie-3" value="3" onChange={event => setFormData({ ...formData, howMuchDoYouEnjoyEatingPie: event.target.value })} /> 3
                                 </label>
                                 <label htmlFor="howMuchDoYouEnjoyEatingPie-4" className="flex flex-row items-center justify-center">
-                                    <input className="form-radio mr-2" name="howMuchDoYouEnjoyEatingPie" type="radio" id="howMuchDoYouEnjoyEatingPie-4" value="4" onChange={event => setFormData({ ...formData, howMuchDoYouEnjoyEatingPie: event.target.value })} /> 4
+                                    <input className="field-input-radio" name="howMuchDoYouEnjoyEatingPie" type="radio" id="howMuchDoYouEnjoyEatingPie-4" value="4" onChange={event => setFormData({ ...formData, howMuchDoYouEnjoyEatingPie: event.target.value })} /> 4
                                 </label>
                                 <label htmlFor="howMuchDoYouEnjoyEatingPie-5" className="flex flex-row items-center justify-center">
-                                    <input className="form-radio mr-2" name="howMuchDoYouEnjoyEatingPie" type="radio" id="howMuchDoYouEnjoyEatingPie-5" value="5" onChange={event => setFormData({ ...formData, howMuchDoYouEnjoyEatingPie: event.target.value })} /> 5
+                                    <input className="field-input-radio" name="howMuchDoYouEnjoyEatingPie" type="radio" id="howMuchDoYouEnjoyEatingPie-5" value="5" onChange={event => setFormData({ ...formData, howMuchDoYouEnjoyEatingPie: event.target.value })} /> 5
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-row space-x-4 w-full">
-                        <div className="flex flex-col items-start justify-center space-y-2 w-full">
+                    <div className="form-row">
+                        <div className="field-wrapper">
                             <label htmlFor="message">Message <span className="ml-1 text-[red]">*</span></label>
                             <textarea className="form-textarea w-full" name="message" id="message" rows={5} value={formData.message} onChange={event => setFormData({ ...formData, message: event.target.value })} required></textarea>
                         </div>
                     </div>
-                    <div className="flex flex-row space-x-4 w-full">
-                        <div className="flex flex-col items-start justify-center space-y-2 w-full">
+                    <div className="form-row">
+                        <div className="field-wrapper">
                             <label htmlFor="howDidYouHearAboutThisJobPosting-Newspaper">How did you hear about us?</label>
                             <label className="flex flex-row items-center justify-center">
-                                <input className="form-checkbox mr-2" name="howDidYouHearAboutThisJobPosting[]" type="checkbox" id="howDidYouHearAboutThisJobPosting-Newspaper" value="Newspaper" onChange={handleHowDidYouHearAboutThisJobPosting} /> Newspaper
+                                <input className="field-input-checkbox" name="howDidYouHearAboutThisJobPosting[]" type="checkbox" id="howDidYouHearAboutThisJobPosting-Newspaper" value="Newspaper" onChange={handleHowDidYouHearAboutThisJobPosting} /> Newspaper
                             </label>
                             <label className="flex flex-row items-center justify-center">
-                                <input className="form-checkbox mr-2" name="howDidYouHearAboutThisJobPosting[]" type="checkbox" id="howDidYouHearAboutThisJobPosting-Radio" value="Radio" onChange={handleHowDidYouHearAboutThisJobPosting} /> Radio
+                                <input className="field-input-checkbox" name="howDidYouHearAboutThisJobPosting[]" type="checkbox" id="howDidYouHearAboutThisJobPosting-Radio" value="Radio" onChange={handleHowDidYouHearAboutThisJobPosting} /> Radio
                             </label>
                             <label className="flex flex-row items-center justify-center">
-                                <input className="form-checkbox mr-2" name="howDidYouHearAboutThisJobPosting[]" type="checkbox" id="howDidYouHearAboutThisJobPosting-CarrierPigeon" value="Carrier Pigeon" onChange={handleHowDidYouHearAboutThisJobPosting} /> Carrier Pigeon
+                                <input className="field-input-checkbox" name="howDidYouHearAboutThisJobPosting[]" type="checkbox" id="howDidYouHearAboutThisJobPosting-CarrierPigeon" value="Carrier Pigeon" onChange={handleHowDidYouHearAboutThisJobPosting} /> Carrier Pigeon
                             </label>
                             <label className="flex flex-row items-center justify-center">
-                                <input className="form-checkbox mr-2" name="howDidYouHearAboutThisJobPosting[]" type="checkbox" id="howDidYouHearAboutThisJobPosting-Other" value="Other" onChange={handleHowDidYouHearAboutThisJobPosting} /> Other
+                                <input className="field-input-checkbox" name="howDidYouHearAboutThisJobPosting[]" type="checkbox" id="howDidYouHearAboutThisJobPosting-Other" value="Other" onChange={handleHowDidYouHearAboutThisJobPosting} /> Other
                             </label>
                         </div>
                     </div>
-                    <div className="flex flex-row space-x-4 w-full">
-                        <div className="flex flex-col items-start justify-center space-y-2 w-full">
+                    <div className="form-row">
+                        <div className="field-wrapper">
                             <label htmlFor="acceptTerms" className="flex flex-row items-center justify-center">
-                                <input className="form-checkbox mr-2" name="acceptTerms" type="checkbox" id="acceptTerms" value="yes" onChange={event => setFormData({ ...formData, acceptTerms: event.target.checked ? event.target.value : '' })} required />
+                                <input className="field-input-checkbox" name="acceptTerms" type="checkbox" id="acceptTerms" value="yes" onChange={event => setFormData({ ...formData, acceptTerms: event.target.checked ? event.target.value : '' })} required />
                                 I agree to the <a href="https://solspace.com" className="mx-1 underline">terms &amp; conditions</a> required by this site. <span className="ml-1 text-[red]">*</span>
                             </label>
                         </div>
