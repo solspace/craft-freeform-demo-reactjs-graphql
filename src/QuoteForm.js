@@ -359,7 +359,7 @@ const Form = () => {
                     <div className="form-row">
                         <div className="field-wrapper">
                             <label htmlFor="message">Message <span className="ml-1 text-[red]">*</span></label>
-                            <textarea className="form-textarea w-full" name="message" id="message" rows={5} value={formData.message} onChange={event => setFormData({ ...formData, message: event.target.value })} required></textarea>
+                            <textarea className="form-textarea field-input" name="message" id="message" rows={5} value={formData.message} onChange={event => setFormData({ ...formData, message: event.target.value })} required></textarea>
                         </div>
                     </div>
                     <div className="form-row">
@@ -388,7 +388,7 @@ const Form = () => {
                         </div>
                     </div>
                     <div className="flex flex-row w-full">
-                        <div className="flex flex-row items-center justify-center space-y-2 w-full">
+                        <div class="flex flex-row items-left justify-left space-y-2 w-full">
                             <button className="btn-primary" type="submit">Submit</button>
                         </div>
                     </div>
