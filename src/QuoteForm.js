@@ -131,7 +131,11 @@ const Form = () => {
         onError: ({ graphQLErrors }) => {
             showSubmissionError();
 
-            graphQLErrors.forEach(({ message }) => showFieldError(message));
+            graphQLErrors.forEach(({ message }) => {
+                const messages = JSON.parse(message);
+
+                messages.forEach(message => showFieldError(message));
+            });
 
             stopProcessing();
         },
@@ -162,9 +166,6 @@ const Form = () => {
     };
 
     const showFieldError = (message) => {
-        message = JSON.parse(message);
-        message = message[0];
-
         for (const [key, value] of Object.entries(message)) {
             const element = document.querySelector(`.${key}-field .error-message`);
             if (element) {
