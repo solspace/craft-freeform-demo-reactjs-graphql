@@ -19,8 +19,9 @@
     "tailwindcss": "^3.3.2",
     "web-vitals": "^2.1.4"
   },
+  "proxy": "https://demo.solspace.net/craft",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts --max-http-header-size=64555 start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

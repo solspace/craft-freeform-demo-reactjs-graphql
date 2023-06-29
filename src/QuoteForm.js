@@ -41,7 +41,7 @@ const defaultFormProperties = {
 const RECAPTCHA_SITE_KEY = '6Lce6nQmAAAAAO5d4LWC6TkECxNRSG7WNiVj17B1';
 
 const client = new ApolloClient({
-    uri: 'https://demo.solspace.net/craft/graphql/api',
+    uri: '/graphql/api',
     headers: {
         'Cache-Control': 'no-cache',
         'Accept': 'application/json',
@@ -99,7 +99,7 @@ const SAVE_QUOTE_SUBMISSION = gql`
 
 async function getFormProperties(formId) {
     // See https://docs.solspace.com/craft/freeform/v4/developer/graphql/#how-to-render-a-form
-    const response = await fetch(`https://demo.solspace.net/craft/freeform/form/properties/${formId}`, { headers: { 'Accept': 'application/json' }});
+    const response = await fetch(`/freeform/form/properties/${formId}`, { headers: { 'Accept': 'application/json' }});
 
     if (!response.ok) {
         throw new Error('Failed to fetch Craft Freeform Form properties');
