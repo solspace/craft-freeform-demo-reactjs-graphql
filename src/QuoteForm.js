@@ -295,13 +295,13 @@ const Form = () => {
                 <div className="form-row">
                     <div className="field-wrapper firstName-field">
                         <label htmlFor="firstName">First Name <span className="ml-1 text-[red]">*</span></label>
-                        <input className="form-input field-input" name="firstName" type="text" id="firstName" value={formData.firstName} onChange={event => setFormData({ ...formData, firstName: event.target.value })} required />
-                        <span className="error-message hidden w-full text-sm text-left italic text-red-700">This field is required</span>
+                        <input className="form-input field-input" name="firstName" type="text" id="firstName" value={formData.firstName} onChange={event => setFormData({ ...formData, firstName: event.target.value })} />
+                        <span className="error-message hidden w-full text-sm text-left italic text-red-700"></span>
                     </div>
                     <div className="field-wrapper lastName-field">
                         <label htmlFor="lastName">Last Name <span className="ml-1 text-[red]">*</span></label>
-                        <input className="form-input field-input" name="lastName" type="text" id="lastName" value={formData.lastName} onChange={event => setFormData({ ...formData, lastName: event.target.value })} required />
-                        <span className="error-message hidden w-full text-sm text-left italic text-red-700">This field is required</span>
+                        <input className="form-input field-input" name="lastName" type="text" id="lastName" value={formData.lastName} onChange={event => setFormData({ ...formData, lastName: event.target.value })} />
+                        <span className="error-message hidden w-full text-sm text-left italic text-red-700"></span>
                     </div>
                 </div>
                 <div className="form-row">
@@ -314,15 +314,15 @@ const Form = () => {
                     <div className="field-wrapper email-field">
                         <label htmlFor="email">Email <span className="ml-1 text-[red]">*</span></label>
                         <div className="text-sm">We&apos;ll never share your email with anyone else.</div>
-                        <input className="form-input field-input" name="email" type="email" id="email" value={formData.email} onChange={event => setFormData({ ...formData, email: event.target.value })} required />
-                        <span className="error-message hidden w-full text-sm text-left italic text-red-700">This field is required</span>
+                        <input className="form-input field-input" name="email" type="email" id="email" value={formData.email} onChange={event => setFormData({ ...formData, email: event.target.value })} />
+                        <span className="error-message hidden w-full text-sm text-left italic text-red-700"></span>
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="field-wrapper cellPhone-field">
                         <label htmlFor="cellPhone">Cell Phone <span className="ml-1 text-[red]">*</span></label>
-                        <input className="form-input field-input" name="cellPhone" type="tel" id="cellPhone" value={formData.cellPhone} onChange={event => setFormData({ ...formData, cellPhone: event.target.value })} required />
-                        <span className="error-message hidden w-full text-sm text-left italic text-red-700">This field is required</span>
+                        <input className="form-input field-input" name="cellPhone" type="tel" id="cellPhone" value={formData.cellPhone} onChange={event => setFormData({ ...formData, cellPhone: event.target.value })} />
+                        <span className="error-message hidden w-full text-sm text-left italic text-red-700"></span>
                     </div>
                     <div className="field-wrapper">
                         <label htmlFor="homePhone">Home Phone</label>
@@ -336,13 +336,13 @@ const Form = () => {
                 <div className="form-row">
                     <div className="field-wrapper subject-field">
                         <label htmlFor="subject">Subject <span className="ml-1 text-[red]">*</span></label>
-                        <select className="form-select field-input" name="subject" id="subject" value={formData.subject} onChange={event => setFormData({ ...formData, subject: event.target.value })} required>
+                        <select className="form-select field-input" name="subject" id="subject" value={formData.subject} onChange={event => setFormData({ ...formData, subject: event.target.value })}>
                             <option value="">I need some help with...</option>
                             <option value="myHomework">My homework</option>
                             <option value="practicingMyHammerDance">Practicing my hammer dance</option>
                             <option value="findingMyBellyButton">Finding my belly button</option>
                         </select>
-                        <span className="error-message hidden w-full text-sm text-left italic text-red-700">This field is required</span>
+                        <span className="error-message hidden w-full text-sm text-left italic text-red-700"></span>
                     </div>
                     <div className="field-wrapper">
                         <label htmlFor="appointmentDate">Appointment Date</label>
@@ -350,13 +350,13 @@ const Form = () => {
                     </div>
                     <div className="field-wrapper department-field">
                         <label htmlFor="department">Department <span className="ml-1 text-[red]">*</span></label>
-                        <select className="form-select field-input" name="department" id="department" value={formData.department} onChange={event => setFormData({ ...formData, department: event.target.value })} required>
+                        <select className="form-select field-input" name="department" id="department" value={formData.department} onChange={event => setFormData({ ...formData, department: event.target.value })}>
                             <option value="">Please choose...</option>
                             <option value="sales@example.com">Sales</option>
                             <option value="service@example.com">Service</option>
                             <option value="support@example.com">Support</option>
                         </select>
-                        <span className="error-message hidden w-full text-sm text-left italic text-red-700">This field is required</span>
+                        <span className="error-message hidden w-full text-sm text-left italic text-red-700"></span>
                     </div>
                 </div>
                 <div className="form-row">
@@ -384,8 +384,8 @@ const Form = () => {
                 <div className="form-row">
                     <div className="field-wrapper message-field">
                         <label htmlFor="message">Message <span className="ml-1 text-[red]">*</span></label>
-                        <textarea className="form-textarea field-input" name="message" id="message" rows={5} value={formData.message} onChange={event => setFormData({ ...formData, message: event.target.value })} required></textarea>
-                        <span className="error-message hidden w-full text-sm text-left italic text-red-700">This field is required</span>
+                        <textarea className="form-textarea field-input" name="message" id="message" rows={5} value={formData.message} onChange={event => setFormData({ ...formData, message: event.target.value })}></textarea>
+                        <span className="error-message hidden w-full text-sm text-left italic text-red-700"></span>
                     </div>
                 </div>
                 <div className="form-row">
@@ -408,10 +408,10 @@ const Form = () => {
                 <div className="form-row">
                     <div className="field-wrapper acceptTerms-field">
                         <label htmlFor="acceptTerms" className="flex flex-row items-center justify-center">
-                            <input className="field-input-checkbox" name="acceptTerms" type="checkbox" id="acceptTerms" value="yes" onChange={event => setFormData({ ...formData, acceptTerms: event.target.checked ? event.target.value : '' })} required />
+                            <input className="field-input-checkbox" name="acceptTerms" type="checkbox" id="acceptTerms" value="yes" onChange={event => setFormData({ ...formData, acceptTerms: event.target.checked ? event.target.value : '' })} />
                             I agree to the <a href="https://solspace.com" className="mx-1 underline">terms &amp; conditions</a> required by this site. <span className="ml-1 text-[red]">*</span>
                         </label>
-                        <span className="error-message hidden w-full text-sm text-left italic text-red-700">This field is required</span>
+                        <span className="error-message hidden w-full text-sm text-left italic text-red-700"></span>
                     </div>
                 </div>
                 <div className="flex flex-row w-full">
