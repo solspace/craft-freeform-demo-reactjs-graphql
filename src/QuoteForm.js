@@ -288,7 +288,7 @@ const Form = () => {
             <div id="successMessage" className="w-full bg-green-100 border border-green-400 text-sm text-left text-green-700 px-4 py-2 rounded-md mb-8" style={{ display: 'none' }}>
                 <p>{formProperties.successMessage}</p>
             </div>
-            <div id="errorMessage" className="w-full bg-red-100 border border-red-400 text-sm text-left text-red-700 px-4 py-2 rounded-md mb-8" style={{ display: 'none' }}>
+            <div id="errorMessage" className="w-full bg-red-100 border border-red-400 text-sm text-left text-red-500 px-4 py-2 rounded-md mb-8" style={{ display: 'none' }}>
                 <p>{formProperties.errorMessage}</p>
             </div>
             <div className="flex flex-col w-full space-y-3">
@@ -296,12 +296,12 @@ const Form = () => {
                     <div className="field-wrapper firstName-field">
                         <label htmlFor="firstName">First Name <span className="ml-1 text-[red]">*</span></label>
                         <input className="form-input field-input" name="firstName" type="text" id="firstName" value={formData.firstName} onChange={event => setFormData({ ...formData, firstName: event.target.value })} />
-                        <span className="error-message hidden w-full text-sm text-left italic text-red-700"></span>
+                        <span className="field-error error-message hidden"></span>
                     </div>
                     <div className="field-wrapper lastName-field">
                         <label htmlFor="lastName">Last Name <span className="ml-1 text-[red]">*</span></label>
                         <input className="form-input field-input" name="lastName" type="text" id="lastName" value={formData.lastName} onChange={event => setFormData({ ...formData, lastName: event.target.value })} />
-                        <span className="error-message hidden w-full text-sm text-left italic text-red-700"></span>
+                        <span className="field-error error-message hidden"></span>
                     </div>
                 </div>
                 <div className="form-row">
@@ -313,16 +313,16 @@ const Form = () => {
                 <div className="form-row">
                     <div className="field-wrapper email-field">
                         <label htmlFor="email">Email <span className="ml-1 text-[red]">*</span></label>
-                        <div className="text-sm">We&apos;ll never share your email with anyone else.</div>
+                        <div className="text-sm text-slate-400">We&apos;ll never share your email with anyone else.</div>
                         <input className="form-input field-input" name="email" type="email" id="email" value={formData.email} onChange={event => setFormData({ ...formData, email: event.target.value })} />
-                        <span className="error-message hidden w-full text-sm text-left italic text-red-700"></span>
+                        <span className="field-error error-message hidden"></span>
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="field-wrapper cellPhone-field">
                         <label htmlFor="cellPhone">Cell Phone <span className="ml-1 text-[red]">*</span></label>
                         <input className="form-input field-input" name="cellPhone" type="tel" id="cellPhone" value={formData.cellPhone} onChange={event => setFormData({ ...formData, cellPhone: event.target.value })} />
-                        <span className="error-message hidden w-full text-sm text-left italic text-red-700"></span>
+                        <span className="field-error error-message hidden"></span>
                     </div>
                     <div className="field-wrapper">
                         <label htmlFor="homePhone">Home Phone</label>
@@ -342,7 +342,7 @@ const Form = () => {
                             <option value="practicingMyHammerDance">Practicing my hammer dance</option>
                             <option value="findingMyBellyButton">Finding my belly button</option>
                         </select>
-                        <span className="error-message hidden w-full text-sm text-left italic text-red-700"></span>
+                        <span className="field-error error-message hidden"></span>
                     </div>
                     <div className="field-wrapper">
                         <label htmlFor="appointmentDate">Appointment Date</label>
@@ -356,7 +356,7 @@ const Form = () => {
                             <option value="service@example.com">Service</option>
                             <option value="support@example.com">Support</option>
                         </select>
-                        <span className="error-message hidden w-full text-sm text-left italic text-red-700"></span>
+                        <span className="field-error error-message hidden"></span>
                     </div>
                 </div>
                 <div className="form-row">
@@ -385,7 +385,7 @@ const Form = () => {
                     <div className="field-wrapper message-field">
                         <label htmlFor="message">Message <span className="ml-1 text-[red]">*</span></label>
                         <textarea className="form-textarea field-input" name="message" id="message" rows={5} value={formData.message} onChange={event => setFormData({ ...formData, message: event.target.value })}></textarea>
-                        <span className="error-message hidden w-full text-sm text-left italic text-red-700"></span>
+                        <span className="field-error error-message hidden"></span>
                     </div>
                 </div>
                 <div className="form-row">
@@ -411,7 +411,7 @@ const Form = () => {
                             <input className="field-input-checkbox" name="acceptTerms" type="checkbox" id="acceptTerms" value="yes" onChange={event => setFormData({ ...formData, acceptTerms: event.target.checked ? event.target.value : '' })} />
                             I agree to the <a href="https://solspace.com" className="mx-1 underline">terms &amp; conditions</a> required by this site. <span className="ml-1 text-[red]">*</span>
                         </label>
-                        <span className="error-message hidden w-full text-sm text-left italic text-red-700"></span>
+                        <span className="field-error error-message hidden"></span>
                     </div>
                 </div>
                 <div className="flex flex-row w-full">
