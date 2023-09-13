@@ -59,7 +59,7 @@ const client = new ApolloClient({
 const SAVE_QUOTE_SUBMISSION = gql`
   mutation SaveQuoteSubmission(
     $honeypot: FreeformHoneypotInputType,
-    $captcha: FreeformCaptchaInputType,
+    $captcha: FreeformSubmissionCaptchaInputType,
     $csrfToken: FreeformCsrfTokenInputType,
     $workPhone: String,
     $subject: String,
