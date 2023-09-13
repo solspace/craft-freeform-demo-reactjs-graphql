@@ -134,9 +134,13 @@ const Form = () => {
             showSubmissionError();
 
             graphQLErrors.forEach(({ message }) => {
-                const messages = JSON.parse(message);
+                if (message.includes('Unknown argument')) {
+                    console.error(message);
+                } else {
+                    const messages = JSON.parse(message);
 
-                messages.forEach(message => showFieldError(message));
+                    messages.forEach(message => showFieldError(message));
+                }
             });
         },
     });
@@ -167,11 +171,13 @@ const Form = () => {
 
     const showFieldError = (message) => {
         for (const [key, value] of Object.entries(message)) {
-            const element = document.querySelector(`.${key}-field .error-message`);
-            if (element) {
-                element.innerHTML = value[0];
-                element.classList.add('flex');
-                element.classList.remove('hidden');
+            if (!/^-?\d+$/.test(key)) {
+                const element = document.querySelector(`.${key}-field .error-message`);
+                if (element) {
+                    element.innerHTML = value[0];
+                    element.classList.add('flex');
+                    element.classList.remove('hidden');
+                }
             }
         }
     };
