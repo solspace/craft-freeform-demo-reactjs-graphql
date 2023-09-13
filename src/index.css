@@ -3,17 +3,9 @@
 @tailwind utilities;
 
 :root {
-    --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 214, 219, 220;
-    --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --foreground-rgb: 203, 213, 225;
-        --background-start-rgb: 15, 23, 42;
-        --background-end-rgb: 2, 6, 23;
-    }
+    --foreground-rgb: 203, 213, 225;
+    --background-start-rgb: 19, 27, 39;
+    --background-end-rgb: 19, 23, 31;
 }
 
 @layer components {
@@ -28,6 +20,9 @@
     }
     .field-input {
         @apply w-full text-slate-300 bg-slate-800 border-slate-600 text-sm rounded-md;
+    }
+    .field-error {
+        @apply w-full text-sm text-left italic text-red-500;
     }
     .field-input-radio {
         @apply form-radio mr-2 bg-slate-300;
@@ -45,4 +40,8 @@ body {
             rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+}
+
+main {
+    margin: 0 auto;
 }
