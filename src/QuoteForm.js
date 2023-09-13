@@ -121,14 +121,16 @@ const Form = () => {
 
     const [saveQuoteSubmission] = useMutation(SAVE_QUOTE_SUBMISSION, {
         onCompleted: (data) => {
+            stopProcessing();
+
             if (data && Object.hasOwn(data, 'save_quote_Submission') && data['save_quote_Submission'] !== null) {
                 showSubmissionSuccess();
             } else {
                 showSubmissionError();
             }
-            stopProcessing();
         },
         onError: ({ graphQLErrors }) => {
+            stopProcessing();
             showSubmissionError();
 
             graphQLErrors.forEach(({ message }) => {
@@ -136,8 +138,6 @@ const Form = () => {
 
                 messages.forEach(message => showFieldError(message));
             });
-
-            stopProcessing();
         },
     });
 
