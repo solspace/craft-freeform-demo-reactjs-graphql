@@ -115,6 +115,7 @@ const Form = () => {
     const [reCaptchaValue, setReCaptchaValue] = useState('');
     const [formProperties, setFormProperties] = useState(defaultFormProperties);
 
+    const spamMessage = document.querySelector('#spamMessage');
     const errorMessage = document.querySelector('#errorMessage');
     const successMessage = document.querySelector('#successMessage');
     const submitButton = document.querySelector('button[type="submit"]');
@@ -134,7 +135,9 @@ const Form = () => {
             showSubmissionError();
 
             graphQLErrors.forEach(({ message }) => {
-                if (message.includes('Unknown argument')) {
+                if (message.includes('Please verify that you are not a robot.')) {
+                    showSpamError();
+                } else if (message.includes('Unknown argument')) {
                     console.error(message);
                 } else {
                     const messages = JSON.parse(message);
@@ -169,6 +172,11 @@ const Form = () => {
         scrollToTop();
     };
 
+    const showSpamError = () => {
+        spamMessage.style.display = 'block';
+        scrollToTop();
+    };
+
     const showFieldError = (message) => {
         for (const [key, value] of Object.entries(message)) {
             if (!/^-?\d+$/.test(key)) {
@@ -194,6 +202,10 @@ const Form = () => {
         }
     };
 
+    const hideSpamError = () => {
+        spamMessage.style.display = 'none';
+    };
+
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -212,6 +224,7 @@ const Form = () => {
 
         const { csrf, honeypot, reCaptcha } = formProperties;
 
+        hideSpamError();
         hideSubmissionError();
         hideSubmissionSuccess();
         startProcessing();
@@ -296,6 +309,9 @@ const Form = () => {
             </div>
             <div id="errorMessage" className="w-full bg-red-100 border border-red-400 text-sm text-left text-red-500 px-4 py-2 rounded-md mb-8" style={{ display: 'none' }}>
                 <p>{formProperties.errorMessage}</p>
+            </div>
+            <div id="spamMessage" className="w-full bg-red-100 border border-red-400 text-sm text-left text-red-500 px-4 py-2 rounded-md mb-8" style={{ display: 'none' }}>
+                <p>Please verify that you are not a robot.</p>
             </div>
             <div className="flex flex-col w-full space-y-3">
                 <div className="form-row">
