@@ -38,10 +38,11 @@ const defaultFormProperties = {
     errorMessage: '',
 };
 
-const RECAPTCHA_SITE_KEY = '6Lce6nQmAAAAAO5d4LWC6TkECxNRSG7WNiVj17B1';
+// ENTER YOUR RECAPTCHA KEY HERE
+const RECAPTCHA_SITE_KEY = '';
 
 const client = new ApolloClient({
-    uri: '/graphql/api',
+    uri: '/craft/graphql/api',
     headers: {
         'Cache-Control': 'no-cache',
         'Accept': 'application/json',
@@ -99,7 +100,7 @@ const SAVE_QUOTE_SUBMISSION = gql`
 
 async function getFormProperties(formId) {
     // See https://docs.solspace.com/craft/freeform/v4/developer/graphql/#how-to-render-a-form
-    const response = await fetch(`/freeform/form/properties/${formId}`, { headers: { 'Accept': 'application/json' }});
+    const response = await fetch(`/craft/freeform/form/properties/${formId}`, { headers: { 'Accept': 'application/json' }});
 
     if (!response.ok) {
         throw new Error('Failed to fetch Craft Freeform Form properties');
@@ -112,19 +113,18 @@ const Form = () => {
     const { executeRecaptcha } = useGoogleReCaptcha();
 
     const [formData, setFormData] = useState(defaultFormData);
-    const [reCaptchaValue, setReCaptchaValue] = useState('');
     const [formProperties, setFormProperties] = useState(defaultFormProperties);
-
-    const spamMessage = document.querySelector('#spamMessage');
-    const errorMessage = document.querySelector('#errorMessage');
-    const successMessage = document.querySelector('#successMessage');
-    const submitButton = document.querySelector('button[type="submit"]');
+    const [showSpam, setShowSpam] = useState(false);
+    const [showError, setShowError] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [fieldErrors, setFieldErrors] = useState({});
 
     const [saveQuoteSubmission] = useMutation(SAVE_QUOTE_SUBMISSION, {
         onCompleted: (data) => {
             stopProcessing();
 
-            if (data && Object.hasOwn(data, 'save_quote_Submission') && data['save_quote_Submission'] !== null) {
+            if (data?.save_quote_Submission) {
                 showSubmissionSuccess();
             } else {
                 showSubmissionError();
@@ -140,83 +140,79 @@ const Form = () => {
                 } else if (message.includes('Unknown argument')) {
                     console.error(message);
                 } else {
-                    const messages = JSON.parse(message);
-
-                    messages.forEach(message => showFieldError(message));
+                    try {
+                        const messages = JSON.parse(message);
+                        messages.forEach((message) => showFieldError(message));
+                    } catch {
+                        console.error(message);
+                    }
                 }
             });
         },
     });
 
     const startProcessing = () => {
-        submitButton.style.cursor = 'not-allowed';
-        submitButton.innerText = formProperties.loadingText;
+        setIsProcessing(true);
     };
 
     const stopProcessing = () => {
-        submitButton.innerText = 'Submit';
-        submitButton.style.cursor = 'pointer';
+        setIsProcessing(false);
     };
 
     const showSubmissionSuccess = () => {
-        successMessage.style.display = 'block';
+        setShowSuccess(true);
         scrollToTop();
     };
 
     const hideSubmissionSuccess = () => {
-        successMessage.style.display = 'none';
+        setShowSuccess(false);
     };
 
     const showSubmissionError = () => {
-        errorMessage.style.display = 'block';
+        setShowError(true);
         scrollToTop();
-    };
-
-    const showSpamError = () => {
-        spamMessage.style.display = 'block';
-        scrollToTop();
-    };
-
-    const showFieldError = (message) => {
-        for (const [key, value] of Object.entries(message)) {
-            if (!/^-?\d+$/.test(key)) {
-                const element = document.querySelector(`.${key}-field .error-message`);
-                if (element) {
-                    element.innerHTML = value[0];
-                    element.classList.add('flex');
-                    element.classList.remove('hidden');
-                }
-            }
-        }
     };
 
     const hideSubmissionError = () => {
-        errorMessage.style.display = 'none';
+        setShowError(false);
+        setFieldErrors({});
+    };
 
-        const errors = document.querySelectorAll('.error-message');
-        if (errors) {
-            errors.forEach(error => {
-                error.classList.remove('flex');
-                error.classList.add('hidden');
-            });
-        }
+    const showSpamError = () => {
+        setShowSpam(true);
+        scrollToTop();
     };
 
     const hideSpamError = () => {
-        spamMessage.style.display = 'none';
+        setShowSpam(false);
+    };
+
+    const showFieldError = (message) => {
+        setFieldErrors((currentErrors) => {
+            const nextErrors = { ...currentErrors };
+
+            for (const [key, value] of Object.entries(message)) {
+                if (!/^-?\d+$/.test(key) && Array.isArray(value) && value.length) {
+                    nextErrors[key] = value[0];
+                }
+            }
+
+            return nextErrors;
+        });
     };
 
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    const isFormReady = Boolean(formProperties.csrf?.name && formProperties.csrf?.token);
+
     const handleReCaptchaVerify = useCallback(async () => {
         if (!executeRecaptcha) {
-            return;
+            return null;
         }
 
-        const token = await executeRecaptcha();
-        setReCaptchaValue(token);
+        return await executeRecaptcha('submit');
     }, [executeRecaptcha]);
 
     const handleSubmit = async (event) => {
@@ -229,36 +225,51 @@ const Form = () => {
         hideSubmissionSuccess();
         startProcessing();
 
-        handleReCaptchaVerify().then(() => saveQuoteSubmission({
-            variables: {
-                honeypot: {
-                    name: honeypot.name,
-                    value: honeypot.value,
-                },
-                csrfToken: {
-                    name: csrf.name,
-                    value: csrf.token,
-                },
-                reCaptcha: {
+        try {
+            let reCaptchaInput = undefined;
+
+            if (reCaptcha?.enabled) {
+                const token = await handleReCaptchaVerify();
+
+                reCaptchaInput = {
                     name: reCaptcha.name,
-                    value: reCaptchaValue,
+                    value: token,
+                };
+            }
+
+            await saveQuoteSubmission({
+                variables: {
+                    honeypot: {
+                        name: honeypot.name,
+                        value: honeypot.value,
+                    },
+                    csrfToken: {
+                        name: csrf.name,
+                        value: csrf.token,
+                    },
+                    reCaptcha: reCaptchaInput,
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    companyName: formData.companyName,
+                    email: formData.email,
+                    cellPhone: formData.cellPhone,
+                    homePhone: formData.homePhone,
+                    workPhone: formData.workPhone,
+                    subject: formData.subject,
+                    appointmentDate: formData.appointmentDate,
+                    department: formData.department,
+                    howMuchDoYouEnjoyEatingPie: formData.howMuchDoYouEnjoyEatingPie,
+                    message: formData.message,
+                    howDidYouHearAboutThisJobPosting: formData.howDidYouHearAboutThisJobPosting,
+                    acceptTerms: formData.acceptTerms,
                 },
-                firstName: formData.firstName,
-                lastName: formData.lastName,
-                companyName: formData.companyName,
-                email: formData.email,
-                cellPhone: formData.cellPhone,
-                homePhone: formData.homePhone,
-                workPhone: formData.workPhone,
-                subject: formData.subject,
-                appointmentDate: formData.appointmentDate,
-                department: formData.department,
-                howMuchDoYouEnjoyEatingPie: formData.howMuchDoYouEnjoyEatingPie,
-                message: formData.message,
-                howDidYouHearAboutThisJobPosting: formData.howDidYouHearAboutThisJobPosting,
-                acceptTerms: formData.acceptTerms,
-            },
-        }));
+            });
+        } catch (error) {
+            stopProcessing();
+            showSubmissionError();
+
+            console.error(error);
+        }
     };
 
     const handleHowDidYouHearAboutThisJobPosting = (event) => {
@@ -276,10 +287,6 @@ const Form = () => {
         });
     };
 
-    useEffect(() => {
-        handleReCaptchaVerify().then();
-    }, [handleReCaptchaVerify]);
-
     /**
      * Note the ignore variable which is initialized to false, and is set to true during cleanup.
      * This ensures your code doesn't suffer from "race conditions": network responses may arrive in a different order than you sent them.
@@ -287,8 +294,8 @@ const Form = () => {
     useEffect(() => {
         let ignore = false;
 
-        // Set your Freeform Form ID from Craft.
-        const formId = 4;
+        // ENTER YOUR FORM ID HERE
+        const formId = 1;
 
         getFormProperties(formId).then(formProperties => {
             if (!ignore) {
@@ -304,26 +311,36 @@ const Form = () => {
     return (
         <form className="text-center flex flex-col items-left justify-left" onSubmit={handleSubmit}>
             <h3 className="mb-4 text-xl font-normal text-left">Quote Form</h3>
-            <div id="successMessage" className="w-full bg-green-100 border border-green-400 text-sm text-left text-green-700 px-4 py-2 rounded-md mb-8" style={{ display: 'none' }}>
-                <p>{formProperties.successMessage}</p>
-            </div>
-            <div id="errorMessage" className="w-full bg-red-100 border border-red-400 text-sm text-left text-red-500 px-4 py-2 rounded-md mb-8" style={{ display: 'none' }}>
-                <p>{formProperties.errorMessage}</p>
-            </div>
-            <div id="spamMessage" className="w-full bg-red-100 border border-red-400 text-sm text-left text-red-500 px-4 py-2 rounded-md mb-8" style={{ display: 'none' }}>
-                <p>Please verify that you are not a robot.</p>
-            </div>
+            {showSuccess && (
+                <div id="successMessage" className="w-full bg-green-100 border border-green-400 text-sm text-left text-green-700 px-4 py-2 rounded-md mb-8">
+                    <p>{formProperties.successMessage}</p>
+                </div>
+            )}
+            {showError && (
+                <div id="errorMessage" className="w-full bg-red-100 border border-red-400 text-sm text-left text-red-500 px-4 py-2 rounded-md mb-8">
+                    <p>{formProperties.errorMessage}</p>
+                </div>
+            )}
+            {showSpam && (
+                <div id="spamMessage" className="w-full bg-red-100 border border-red-400 text-sm text-left text-red-500 px-4 py-2 rounded-md mb-8">
+                    <p>Please verify that you are not a robot.</p>
+                </div>
+            )}
             <div className="flex flex-col w-full space-y-3">
                 <div className="form-row">
                     <div className="field-wrapper firstName-field">
                         <label htmlFor="firstName">First Name <span className="ml-1 text-[red]">*</span></label>
                         <input className="form-input field-input" name="firstName" type="text" id="firstName" value={formData.firstName} onChange={event => setFormData({ ...formData, firstName: event.target.value })} />
-                        <span className="field-error error-message hidden"></span>
+                        {fieldErrors.firstName && (
+                            <span className="field-error error-message flex">{fieldErrors.firstName}</span>
+                        )}
                     </div>
                     <div className="field-wrapper lastName-field">
                         <label htmlFor="lastName">Last Name <span className="ml-1 text-[red]">*</span></label>
                         <input className="form-input field-input" name="lastName" type="text" id="lastName" value={formData.lastName} onChange={event => setFormData({ ...formData, lastName: event.target.value })} />
-                        <span className="field-error error-message hidden"></span>
+                        {fieldErrors.lastName && (
+                            <span className="field-error error-message flex">{fieldErrors.lastName}</span>
+                        )}
                     </div>
                 </div>
                 <div className="form-row">
@@ -337,14 +354,18 @@ const Form = () => {
                         <label htmlFor="email">Email <span className="ml-1 text-[red]">*</span></label>
                         <div className="text-sm text-slate-400">We&apos;ll never share your email with anyone else.</div>
                         <input className="form-input field-input" name="email" type="email" id="email" value={formData.email} onChange={event => setFormData({ ...formData, email: event.target.value })} />
-                        <span className="field-error error-message hidden"></span>
+                        {fieldErrors.email && (
+                            <span className="field-error error-message flex">{fieldErrors.email}</span>
+                        )}
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="field-wrapper cellPhone-field">
                         <label htmlFor="cellPhone">Cell Phone <span className="ml-1 text-[red]">*</span></label>
                         <input className="form-input field-input" name="cellPhone" type="tel" id="cellPhone" value={formData.cellPhone} onChange={event => setFormData({ ...formData, cellPhone: event.target.value })} />
-                        <span className="field-error error-message hidden"></span>
+                        {fieldErrors.cellPhone && (
+                            <span className="field-error error-message flex">{fieldErrors.cellPhone}</span>
+                        )}
                     </div>
                     <div className="field-wrapper">
                         <label htmlFor="homePhone">Home Phone</label>
@@ -364,7 +385,9 @@ const Form = () => {
                             <option value="practicingMyHammerDance">Practicing my hammer dance</option>
                             <option value="findingMyBellyButton">Finding my belly button</option>
                         </select>
-                        <span className="field-error error-message hidden"></span>
+                        {fieldErrors.subject && (
+                            <span className="field-error error-message flex">{fieldErrors.subject}</span>
+                        )}
                     </div>
                     <div className="field-wrapper">
                         <label htmlFor="appointmentDate">Appointment Date</label>
@@ -378,7 +401,9 @@ const Form = () => {
                             <option value="service@example.com">Service</option>
                             <option value="support@example.com">Support</option>
                         </select>
-                        <span className="field-error error-message hidden"></span>
+                        {fieldErrors.department && (
+                            <span className="field-error error-message flex">{fieldErrors.department}</span>
+                        )}
                     </div>
                 </div>
                 <div className="form-row">
@@ -407,7 +432,9 @@ const Form = () => {
                     <div className="field-wrapper message-field">
                         <label htmlFor="message">Message <span className="ml-1 text-[red]">*</span></label>
                         <textarea className="form-textarea field-input" name="message" id="message" rows={5} value={formData.message} onChange={event => setFormData({ ...formData, message: event.target.value })}></textarea>
-                        <span className="field-error error-message hidden"></span>
+                        {fieldErrors.message && (
+                            <span className="field-error error-message flex">{fieldErrors.message}</span>
+                        )}
                     </div>
                 </div>
                 <div className="form-row">
@@ -433,12 +460,14 @@ const Form = () => {
                             <input className="field-input-checkbox" name="acceptTerms" type="checkbox" id="acceptTerms" value="yes" onChange={event => setFormData({ ...formData, acceptTerms: event.target.checked ? event.target.value : '' })} />
                             I agree to the <a href="https://solspace.com" className="mx-1 underline">terms &amp; conditions</a> required by this site. <span className="ml-1 text-[red]">*</span>
                         </label>
-                        <span className="field-error error-message hidden"></span>
+                        {fieldErrors.acceptTerms && (
+                            <span className="field-error error-message flex">{fieldErrors.acceptTerms}</span>
+                        )}
                     </div>
                 </div>
                 <div className="flex flex-row w-full">
                     <div className="flex flex-row items-left justify-left space-y-2 w-full">
-                        <button className="btn-primary" type="submit">Submit</button>
+                        <button className="btn-primary" type="submit" disabled={isProcessing || !isFormReady} style={{ cursor: isProcessing || !isFormReady ? 'not-allowed' : 'pointer' }}>{isProcessing ? formProperties.loadingText : 'Submit'}</button>
                     </div>
                 </div>
             </div>
