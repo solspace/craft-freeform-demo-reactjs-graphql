@@ -4,7 +4,7 @@ module.exports = function (app) {
     app.use(
         '/craft',
         createProxyMiddleware({
-            target: 'https://craft4.ddev.site',
+            target: 'https://craft5.ddev.site',
             changeOrigin: true,
             secure: false,
             pathRewrite: {
