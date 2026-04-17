@@ -2,6 +2,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { ApolloClient, gql, useMutation, InMemoryCache, ApolloProvider } from '@apollo/client';
 
+// ENTER YOUR FORM ID HERE
+const FORM_ID = 1;
+
+// ENTER YOUR RECAPTCHA KEY HERE
+const RECAPTCHA_SITE_KEY = '6LeApZMrAAAAAFL3uAaRsuJH5RsNkn7gyZJsDaFy';
+
 const defaultFormData = {
     workPhone: '',
     subject: '',
@@ -37,9 +43,6 @@ const defaultFormProperties = {
     successMessage: '',
     errorMessage: '',
 };
-
-// ENTER YOUR RECAPTCHA KEY HERE
-const RECAPTCHA_SITE_KEY = '';
 
 const client = new ApolloClient({
     uri: '/craft/graphql/api',
@@ -98,9 +101,9 @@ const SAVE_QUOTE_SUBMISSION = gql`
     }
 `;
 
-async function getFormProperties(formId) {
+async function getFormProperties() {
     // See https://docs.solspace.com/craft/freeform/v4/developer/graphql/#how-to-render-a-form
-    const response = await fetch(`/craft/freeform/form/properties/${formId}`, {
+    const response = await fetch(`/craft/freeform/form/properties/${FORM_ID}`, {
         headers: {
             'Accept': 'application/json',
         }
@@ -200,6 +203,16 @@ const Form = () => {
                     nextErrors[key] = value[0];
                 }
             }
+
+            return nextErrors;
+        });
+    };
+
+    const clearFieldError = (fieldName) => {
+        setFieldErrors((currentErrors) => {
+            const nextErrors = { ...currentErrors };
+
+            delete nextErrors[fieldName];
 
             return nextErrors;
         });
@@ -305,10 +318,7 @@ const Form = () => {
     useEffect(() => {
         let ignore = false;
 
-        // ENTER YOUR FORM ID HERE
-        const formId = 1;
-
-        getFormProperties(formId)
+        getFormProperties()
             .then((formProperties) => {
                 if (!ignore) {
                     setFormProperties(formProperties);
@@ -349,14 +359,14 @@ const Form = () => {
                 <div className="form-row">
                     <div className="field-wrapper firstName-field">
                         <label htmlFor="firstName">First Name <span className="ml-1 text-[red]">*</span></label>
-                        <input className="form-input field-input" name="firstName" type="text" id="firstName" value={formData.firstName} onChange={event => setFormData({ ...formData, firstName: event.target.value })} />
+                        <input className="form-input field-input" name="firstName" type="text" id="firstName" value={formData.firstName} onChange={event => { setFormData({ ...formData, firstName: event.target.value }); clearFieldError('firstName'); }} />
                         {fieldErrors.firstName && (
                             <span className="field-error error-message flex">{fieldErrors.firstName}</span>
                         )}
                     </div>
                     <div className="field-wrapper lastName-field">
                         <label htmlFor="lastName">Last Name <span className="ml-1 text-[red]">*</span></label>
-                        <input className="form-input field-input" name="lastName" type="text" id="lastName" value={formData.lastName} onChange={event => setFormData({ ...formData, lastName: event.target.value })} />
+                        <input className="form-input field-input" name="lastName" type="text" id="lastName" value={formData.lastName} onChange={event => { setFormData({ ...formData, lastName: event.target.value }); clearFieldError('lastName'); }} />
                         {fieldErrors.lastName && (
                             <span className="field-error error-message flex">{fieldErrors.lastName}</span>
                         )}
@@ -372,7 +382,7 @@ const Form = () => {
                     <div className="field-wrapper email-field">
                         <label htmlFor="email">Email <span className="ml-1 text-[red]">*</span></label>
                         <div className="text-sm text-slate-400">We&apos;ll never share your email with anyone else.</div>
-                        <input className="form-input field-input" name="email" type="email" id="email" value={formData.email} onChange={event => setFormData({ ...formData, email: event.target.value })} />
+                        <input className="form-input field-input" name="email" type="email" id="email" value={formData.email} onChange={event => { setFormData({ ...formData, email: event.target.value }); clearFieldError('email'); }} />
                         {fieldErrors.email && (
                             <span className="field-error error-message flex">{fieldErrors.email}</span>
                         )}
@@ -381,7 +391,7 @@ const Form = () => {
                 <div className="form-row">
                     <div className="field-wrapper cellPhone-field">
                         <label htmlFor="cellPhone">Cell Phone <span className="ml-1 text-[red]">*</span></label>
-                        <input className="form-input field-input" name="cellPhone" type="tel" id="cellPhone" value={formData.cellPhone} onChange={event => setFormData({ ...formData, cellPhone: event.target.value })} />
+                        <input className="form-input field-input" name="cellPhone" type="tel" id="cellPhone" value={formData.cellPhone} onChange={event => { setFormData({ ...formData, cellPhone: event.target.value }); clearFieldError('cellPhone'); }} />
                         {fieldErrors.cellPhone && (
                             <span className="field-error error-message flex">{fieldErrors.cellPhone}</span>
                         )}
@@ -398,7 +408,7 @@ const Form = () => {
                 <div className="form-row">
                     <div className="field-wrapper subject-field">
                         <label htmlFor="subject">Subject <span className="ml-1 text-[red]">*</span></label>
-                        <select className="form-select field-input" name="subject" id="subject" value={formData.subject} onChange={event => setFormData({ ...formData, subject: event.target.value })}>
+                        <select className="form-select field-input" name="subject" id="subject" value={formData.subject} onChange={event => { setFormData({ ...formData, subject: event.target.value }); clearFieldError('subject'); }}>
                             <option value="">I need some help with...</option>
                             <option value="myHomework">My homework</option>
                             <option value="practicingMyHammerDance">Practicing my hammer dance</option>
@@ -414,7 +424,7 @@ const Form = () => {
                     </div>
                     <div className="field-wrapper department-field">
                         <label htmlFor="department">Department <span className="ml-1 text-[red]">*</span></label>
-                        <select className="form-select field-input" name="department" id="department" value={formData.department} onChange={event => setFormData({ ...formData, department: event.target.value })}>
+                        <select className="form-select field-input" name="department" id="department" value={formData.department} onChange={event => { setFormData({ ...formData, department: event.target.value }); clearFieldError('department'); }}>
                             <option value="">Please choose...</option>
                             <option value="sales@example.com">Sales</option>
                             <option value="service@example.com">Service</option>
@@ -440,7 +450,7 @@ const Form = () => {
                 <div className="form-row">
                     <div className="field-wrapper message-field">
                         <label htmlFor="message">Message <span className="ml-1 text-[red]">*</span></label>
-                        <textarea className="form-textarea field-input" name="message" id="message" rows={5} value={formData.message} onChange={event => setFormData({ ...formData, message: event.target.value })}></textarea>
+                        <textarea className="form-textarea field-input" name="message" id="message" rows={5} value={formData.message} onChange={event => { setFormData({ ...formData, message: event.target.value }); clearFieldError('message'); }}></textarea>
                         {fieldErrors.message && (
                             <span className="field-error error-message flex">{fieldErrors.message}</span>
                         )}
@@ -466,7 +476,7 @@ const Form = () => {
                 <div className="form-row">
                     <div className="field-wrapper acceptTerms-field">
                         <label htmlFor="acceptTerms" className="flex flex-row items-center justify-center">
-                            <input className="field-input-checkbox" name="acceptTerms" type="checkbox" id="acceptTerms" value="yes" onChange={event => setFormData({ ...formData, acceptTerms: event.target.checked ? event.target.value : '' })} />
+                            <input className="field-input-checkbox" name="acceptTerms" type="checkbox" id="acceptTerms" value="yes" onChange={event => { setFormData({ ...formData, acceptTerms: event.target.checked ? event.target.value : '' }); clearFieldError('acceptTerms'); }} />
                             I agree to the <a href="https://solspace.com" className="mx-1 underline">terms &amp; conditions</a> required by this site. <span className="ml-1 text-[red]">*</span>
                         </label>
                         {fieldErrors.acceptTerms && (
