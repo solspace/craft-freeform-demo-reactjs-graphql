@@ -225,7 +225,7 @@ const Form = () => {
         });
     };
 
-    const isFormReady = Boolean(formProperties.csrf?.name && formProperties.csrf?.token);
+    const isFormReady = Boolean(formProperties.csrf?.name && formProperties.csrf?.token && formProperties.honeypot?.name);
 
     const handleReCaptchaVerify = useCallback(async () => {
         if (!executeRecaptcha) {
