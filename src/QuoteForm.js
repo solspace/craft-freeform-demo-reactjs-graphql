@@ -3,10 +3,10 @@ import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recapt
 import { ApolloClient, gql, useMutation, InMemoryCache, ApolloProvider } from '@apollo/client';
 
 // ENTER YOUR FORM ID HERE
-const FORM_ID = 1;
+const FORM_ID = undefined;
 
 // ENTER YOUR RECAPTCHA KEY HERE
-const RECAPTCHA_SITE_KEY = '6LeApZMrAAAAAFL3uAaRsuJH5RsNkn7gyZJsDaFy';
+const RECAPTCHA_SITE_KEY = undefined;
 
 const defaultFormData = {
     workPhone: '',
