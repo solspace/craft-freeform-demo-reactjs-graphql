@@ -54,53 +54,57 @@ const client = new ApolloClient({
 });
 
 const SAVE_QUOTE_SUBMISSION = gql`
-  mutation SaveQuoteSubmission(
-    $honeypot: FreeformHoneypotInputType,
-    $reCaptcha: FreeformSubmissionReCaptchaInputType,
-    $csrfToken: FreeformCsrfTokenInputType,
-    $workPhone: String,
-    $subject: String,
-    $message: String,
-    $lastName: String,
-    $howMuchDoYouEnjoyEatingPie: String,
-    $howDidYouHearAboutThisJobPosting: [String],
-    $homePhone: String,
-    $firstName: String,
-    $email: String,
-    $department: String,
-    $companyName: String,
-    $cellPhone: String,
-    $appointmentDate: DateTime,
-    $acceptTerms: String
-  ) {
-    save_quote_Submission(
-      honeypot: $honeypot
-      reCaptcha: $reCaptcha
-      csrfToken: $csrfToken
-      workPhone: $workPhone
-      subject: $subject
-      message: $message
-      lastName: $lastName
-      howMuchDoYouEnjoyEatingPie: $howMuchDoYouEnjoyEatingPie
-      howDidYouHearAboutThisJobPosting: $howDidYouHearAboutThisJobPosting
-      homePhone: $homePhone
-      firstName: $firstName
-      email: $email
-      department: $department
-      companyName: $companyName
-      cellPhone: $cellPhone
-      appointmentDate: $appointmentDate
-      acceptTerms: $acceptTerms
+    mutation SaveQuoteSubmission(
+        $honeypot: FreeformHoneypotInputType,
+        $reCaptcha: FreeformSubmissionReCaptchaInputType,
+        $csrfToken: FreeformCsrfTokenInputType,
+        $workPhone: String,
+        $subject: String,
+        $message: String,
+        $lastName: String,
+        $howMuchDoYouEnjoyEatingPie: String,
+        $howDidYouHearAboutThisJobPosting: [String],
+        $homePhone: String,
+        $firstName: String,
+        $email: String,
+        $department: String,
+        $companyName: String,
+        $cellPhone: String,
+        $appointmentDate: DateTime,
+        $acceptTerms: String
     ) {
-      submissionId
-      success
+        save_quote_Submission(
+            honeypot: $honeypot
+            reCaptcha: $reCaptcha
+            csrfToken: $csrfToken
+            workPhone: $workPhone
+            subject: $subject
+            message: $message
+            lastName: $lastName
+            howMuchDoYouEnjoyEatingPie: $howMuchDoYouEnjoyEatingPie
+            howDidYouHearAboutThisJobPosting: $howDidYouHearAboutThisJobPosting
+            homePhone: $homePhone
+            firstName: $firstName
+            email: $email
+            department: $department
+            companyName: $companyName
+            cellPhone: $cellPhone
+            appointmentDate: $appointmentDate
+            acceptTerms: $acceptTerms
+        ) {
+            submissionId
+            success
+        }
     }
-  }
 `;
 
 async function getFormProperties(formId) {
     // See https://docs.solspace.com/craft/freeform/v4/developer/graphql/#how-to-render-a-form
-    const response = await fetch(`/craft/freeform/form/properties/${formId}`, { headers: { 'Accept': 'application/json' }});
+    const response = await fetch(`/craft/freeform/form/properties/${formId}`, {
+        headers: {
+            'Accept': 'application/json',
+        }
+    });
 
     if (!response.ok) {
         throw new Error('Failed to fetch Craft Freeform Form properties');
@@ -202,7 +206,10 @@ const Form = () => {
     };
 
     const scrollToTop = () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
     };
 
     const isFormReady = Boolean(formProperties.csrf?.name && formProperties.csrf?.token);
@@ -217,6 +224,10 @@ const Form = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        if (!isFormReady) {
+            return;
+        }
 
         const { csrf, honeypot, reCaptcha } = formProperties;
 
@@ -297,11 +308,19 @@ const Form = () => {
         // ENTER YOUR FORM ID HERE
         const formId = 1;
 
-        getFormProperties(formId).then(formProperties => {
-            if (!ignore) {
-                setFormProperties(formProperties);
-            }
-        });
+        getFormProperties(formId)
+            .then((formProperties) => {
+                if (!ignore) {
+                    setFormProperties(formProperties);
+                }
+            })
+            .catch((error) => {
+                if (!ignore) {
+                    console.error(error);
+
+                    setShowError(true);
+                }
+            });
 
         return () => {
             ignore = true;
@@ -410,21 +429,11 @@ const Form = () => {
                     <div className="field-wrapper">
                         <label htmlFor="howMuchDoYouEnjoyEatingPie-1" className="flex flex-row">How much do you enjoy eating pie?</label>
                         <div className="flex flex-row space-x-4">
-                            <label htmlFor="howMuchDoYouEnjoyEatingPie-1" className="flex flex-row items-center justify-center">
-                                <input className="field-input-radio" name="howMuchDoYouEnjoyEatingPie" type="radio" id="howMuchDoYouEnjoyEatingPie-1" value="1" onChange={event => setFormData({ ...formData, howMuchDoYouEnjoyEatingPie: event.target.value })} /> 1
-                            </label>
-                            <label htmlFor="howMuchDoYouEnjoyEatingPie-2" className="flex flex-row items-center justify-center">
-                                <input className="field-input-radio" name="howMuchDoYouEnjoyEatingPie" type="radio" id="howMuchDoYouEnjoyEatingPie-2" value="2" onChange={event => setFormData({ ...formData, howMuchDoYouEnjoyEatingPie: event.target.value })} /> 2
-                            </label>
-                            <label htmlFor="howMuchDoYouEnjoyEatingPie-3" className="flex flex-row items-center justify-center">
-                                <input className="field-input-radio" name="howMuchDoYouEnjoyEatingPie" type="radio" id="howMuchDoYouEnjoyEatingPie-3" value="3" onChange={event => setFormData({ ...formData, howMuchDoYouEnjoyEatingPie: event.target.value })} /> 3
-                            </label>
-                            <label htmlFor="howMuchDoYouEnjoyEatingPie-4" className="flex flex-row items-center justify-center">
-                                <input className="field-input-radio" name="howMuchDoYouEnjoyEatingPie" type="radio" id="howMuchDoYouEnjoyEatingPie-4" value="4" onChange={event => setFormData({ ...formData, howMuchDoYouEnjoyEatingPie: event.target.value })} /> 4
-                            </label>
-                            <label htmlFor="howMuchDoYouEnjoyEatingPie-5" className="flex flex-row items-center justify-center">
-                                <input className="field-input-radio" name="howMuchDoYouEnjoyEatingPie" type="radio" id="howMuchDoYouEnjoyEatingPie-5" value="5" onChange={event => setFormData({ ...formData, howMuchDoYouEnjoyEatingPie: event.target.value })} /> 5
-                            </label>
+                            {[1, 2, 3, 4, 5].map((value) => (
+                                <label key={value} htmlFor={`howMuchDoYouEnjoyEatingPie-${value}`} className="flex flex-row items-center justify-center">
+                                    <input className="field-input-radio" name="howMuchDoYouEnjoyEatingPie" type="radio" id={`howMuchDoYouEnjoyEatingPie-${value}`} value={String(value)} onChange={(event) => setFormData({ ...formData, howMuchDoYouEnjoyEatingPie: event.target.value })} /> {value}
+                                </label>
+                            ))}
                         </div>
                     </div>
                 </div>
@@ -467,7 +476,7 @@ const Form = () => {
                 </div>
                 <div className="flex flex-row w-full">
                     <div className="flex flex-row items-left justify-left space-y-2 w-full">
-                        <button className="btn-primary" type="submit" disabled={isProcessing || !isFormReady} style={{ cursor: isProcessing || !isFormReady ? 'not-allowed' : 'pointer' }}>{isProcessing ? formProperties.loadingText : 'Submit'}</button>
+                        <button className="btn-primary" type="submit" disabled={isProcessing || !isFormReady} style={{ cursor: isProcessing || !isFormReady ? 'not-allowed' : 'pointer' }}>{isProcessing ? formProperties.loadingText || 'Submitting...' : !isFormReady ? 'Loading...' : 'Submit'}</button>
                     </div>
                 </div>
             </div>
